@@ -1,0 +1,19 @@
+---
+- name: Create user and assign permissions
+  hosts: server
+  become: yes
+
+  tasks:
+    - name: Install python3-passlib for password hashing
+      apt:
+        name: python3-passlib
+        state: present
+
+    - name: Create new user newadmin
+      user:
+        name: newadmin
+        groups: sudo
+        append: yes
+        password: "{{ '123' | password_hash('sha512') }}"
+        shell: /bin/bash
+        home: /home/newadmin

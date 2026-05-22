@@ -1,0 +1,15 @@
+---
+- name: Update all packages and reboot server
+  hosts: server
+  become: yes
+
+  tasks:
+    - name: Update all packages
+      apt:
+        upgrade: dist
+        update_cache: yes
+
+    - name: Reboot server
+      reboot:
+        reboot_timeout: 300
+        msg: "Reboot after system update"
