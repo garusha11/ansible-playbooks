@@ -1,0 +1,24 @@
+---
+- name: Backup configuration files
+  hosts: server
+  become: yes
+
+  vars:
+    backup_files:
+      - /etc/nginx/nginx.conf
+      - /etc/hosts
+    backup_dir: /backup
+
+  tasks:
+    - name: Create backup directory
+      file:
+        path: "{{ backup_dir }}"
+        state: directory
+        mode: "0755"
+
+    - name: Copy files to backup with date
+      copy:
+        src: "{{ item }}"
+        dest: "{{ backup_dir }}/{{ item | basename }}_{{ ansible_date_time.date }}"
+        remote_src: yes
+      loop: "{{ backup_files }}"
